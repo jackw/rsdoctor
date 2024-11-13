@@ -2,6 +2,8 @@ import {
   CodepenCircleOutlined,
   ColumnHeightOutlined,
   DeploymentUnitOutlined,
+  FullscreenExitOutlined,
+  FullscreenOutlined,
   InfoCircleOutlined,
   VerticalAlignMiddleOutlined,
 } from '@ant-design/icons';
@@ -66,6 +68,7 @@ export const WebpackModulesOverallBase: React.FC<
   const [assetPath, setAssetPath] = useState<string | null>(null);
   const [fold, setFold] = useState(false as Boolean);
   const [graphType, setGraphType] = useState('tree' as GraphType);
+  const [maximiseGraph, setMaximiseGraph] = useState(false);
 
   const { t } = useI18n();
 
@@ -177,23 +180,44 @@ export const WebpackModulesOverallBase: React.FC<
 
   return (
     <React.Fragment>
-      <BundleCards cwd={cwd} errors={errors} summary={summary} />
-      <Radio.Group
-        value={graphType}
-        onChange={(e) => setGraphType(e.target.value)}
-        style={{ marginBottom: Size.BasePadding }}
-        buttonStyle="solid"
-        optionType="button"
-      >
-        <Radio.Button value="tree">Tree Graph</Radio.Button>
-        <Radio.Button value="tile">Bundle Analyzer Graph</Radio.Button>
-      </Radio.Group>
+      {!maximiseGraph && (
+        <React.Fragment>
+          <BundleCards cwd={cwd} errors={errors} summary={summary} />
+
+          <Radio.Group
+            value={graphType}
+            onChange={(e) => setGraphType(e.target.value)}
+            style={{ marginBottom: Size.BasePadding }}
+            buttonStyle="solid"
+            optionType="button"
+          >
+            <Radio.Button value="tree">Tree Graph</Radio.Button>
+            <Radio.Button value="tile">Bundle Analyzer Graph</Radio.Button>
+          </Radio.Group>
+        </React.Fragment>
+      )}
       <Card
         hidden={graphType === 'tree'}
         title={
           <Space>
             <Title text="From: Webpack Bundle Analyzer" />
           </Space>
+        }
+        extra={
+          maximiseGraph ? (
+            <Button onClick={() => setMaximiseGraph(false)}>
+              <Typography.Text>
+                Minimise <FullscreenExitOutlined />
+              </Typography.Text>
+            </Button>
+          ) : (
+            <Button onClick={() => setMaximiseGraph(true)}>
+              <Typography.Text>
+                Maximise
+                <FullscreenOutlined />
+              </Typography.Text>
+            </Button>
+          )
         }
       >
         {/* TODO: add loading icon. */}
